@@ -17,7 +17,7 @@ stages {
 
     stage('Deploy') {
         steps {
-            bat 'docker run -d --name node-app -p 3000:3000 node-docker-app:latest'
+            bat 'docker run -d --name node-app -p 3001:3000 node-docker-app:latest'
         }
     }
 }
