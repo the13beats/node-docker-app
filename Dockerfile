@@ -1,7 +1,7 @@
 FROM node:20-alpine
 WORKDIR  /app
 COPY package*.json ./
-RUN npm instal
+RUN npm ins
 COPY . .
 EXPOSE 3001
 CMD ["node", "app.js"]
