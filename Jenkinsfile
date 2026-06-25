@@ -35,7 +35,7 @@ pipeline {
             }
         }
 
-        stage('Update Kubernetes Manifest') {
+        stage('Deploy to Minikube') {
             steps {
                 bat '''
                 kubectl set image deployment/node-docker-app node-docker-app=%IMAGE_NAME%:%IMAGE_TAG%
