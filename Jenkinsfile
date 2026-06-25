@@ -44,11 +44,7 @@ pipeline {
 }       
         
         
-        stage('Check K8s') {
-    steps {
-        bat 'kubectl get nodes'
-    }
-}
+    
         stage('Deploy to Minikube') {
     steps {
         bat '''
