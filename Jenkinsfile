@@ -34,7 +34,14 @@ pipeline {
                 bat "docker push %IMAGE_NAME%:%IMAGE_TAG%"
             }
         }
-        
+        stage('Check Kubeconfig') {
+    steps {
+        bat '''
+        echo %USERPROFILE%
+        dir %USERPROFILE%\\.kube
+        '''
+    }
+}
         stage('Check K8s') {
     steps {
         bat 'kubectl get nodes'
