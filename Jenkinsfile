@@ -1,25 +1,47 @@
 pipeline {
-agent any
+    agent any
 
-stages {
-
-    stage('Build Docker Image') {
-        steps {
-            bat 'docker build -t node-docker-app:latest .'
-        }
+    environment {
+        IMAGE_NAME = "pratham1310/node-docker-app"
+        IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
-    stage('Remove Old Container') {
-        steps {
-            bat 'docker rm -f node-app'
-        }
-    }
+    stages {
 
-    stage('Deploy') {
-        steps {
-            bat 'docker run -d --name node-app -p 3001:3000 node-docker-app:latest'
+        stage('Build Docker Image') {
+            steps {
+                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+
+                    bat '''
+                    docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+                    '''
+                }
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                bat "docker push %IMAGE_NAME%:%IMAGE_TAG%"
+            }
+        }
+
+        stage('Update Kubernetes Manifest') {
+            steps {
+                bat '''
+                kubectl set image deployment/node-docker-app node-docker-app=%IMAGE_NAME%:%IMAGE_TAG%
+                '''
+            }
         }
     }
 }
 
-}
