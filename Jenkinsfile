@@ -41,19 +41,23 @@ pipeline {
         dir %USERPROFILE%\\.kube
         '''
     }
-}
+}       
+        
+        
         stage('Check K8s') {
     steps {
         bat 'kubectl get nodes'
     }
 }
         stage('Deploy to Minikube') {
-            steps {
-                bat '''
-                kubectl set image deployment/node-docker-app node-docker-app=%IMAGE_NAME%:%IMAGE_TAG%
-                '''
-            }
-        }
+    steps {
+        bat '''
+        set KUBECONFIG=C:\\Users\\prathmesh\\.kube\\config
+        kubectl get nodes
+        kubectl set image deployment/node-docker-app node-docker-app=pratham1310/node-docker-app:%BUILD_NUMBER%
+        '''
+    }
+}
     }
 }
 
